@@ -2,12 +2,13 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 90vw;
-    height: 90vh;
-    border: 1px solid #282c34;
-    box-shadow: 1px 2px 3px #282c34;
-    border-radius: 15px;
-    padding: 20px;
+    width: 700px;
+    height: 500px;
+    border: 4px solid var(--accent-color);
+    box-shadow: 1px 1px 15px 0 var(--accent-color);
+    border-radius: 12px;
+    padding: 40px;
+    box-sizing: border-box;
 }
 
 .content {

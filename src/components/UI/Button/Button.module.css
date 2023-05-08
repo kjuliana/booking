@@ -1,0 +1,29 @@
+.root {
+    align-items: center;
+    justify-content: center;
+    justify-items: flex-start;
+    flex: 0 1 auto;
+    max-width: 100%;
+    font-size: 18px;
+    position: relative;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: none;
+    margin: 0;
+    padding: 0 30px;
+    border-radius: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+    color: #fff;
+    height: 49px;
+}
+
+.main {
+    background-color: var(--accent-color);
+    color: #fff;
+}
+
+.service {
+    background-color: var(--apperance-color);
+    color: #000;
+}

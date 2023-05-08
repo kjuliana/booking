@@ -3,39 +3,50 @@ import styles from './Form.module.css';
 import SelectWrapper from "../SelectWrapper/SelectWrapper";
 import TextAreaWrapper from "../TextAreaWrapper/TextAreaWrapper";
 import Button from "../UI/Button/Button";
-import Intervals from "../Intervals/Intervals";
 import TotalCard from "../TotalCard/TotalCard";
 import {IFormData} from "../../models/models";
 
-const Form = () => {
-    const now = new Date();
-    const minMinutes = (Math.ceil((now.getMinutes() + 1) / 15) * 15) % 60;
-    const minHours = minMinutes === 0 ? now.getHours() + 1 : now.getHours();
-    const minDate = now.toLocaleDateString("fr-CA", {year:"numeric", month: "2-digit", day:"2-digit"})
+const dateToString = (date: Date) => {
+    const year = date.getFullYear();
+    const month = (date.getMonth()+1+'').padStart(2, '0');
+    const day = (date.getDate()+'').padStart(2, '0')
+    return `${year}-${month}-${day}`;
+}
 
-    const getEndTime = (startMs: number, intervalMs: number):string => {
-        const endMs = startMs + intervalMs;
-        const endDate = new Date(endMs);
-        const minutes = endDate.getMinutes();
-        const endMinutes = minutes > 9 ? minutes : '0'+minutes;
-        return endDate.getHours() + ':' + endMinutes;
-    }
+const timeToString = (date: Date) => {
+    const hours = (date.getHours()+'').padStart(2, '0');
+    const minutes = (date.getMinutes()+'').padStart(2, '0');
+    return `${hours}:${minutes}`;
+}
+
+
+const getEndTime = (startTime: string, intervalMs: number): string => {
+    const [hour, minute] = startTime.split(':');
+    const date = new Date();
+    date.setHours(Number(hour), Number(minute));
+    return timeToString(new Date(date.getTime() + intervalMs));
+}
+
+const TIME_STEP_MS = 1000*60*15;
+
+const Form = () => {
+
+    const initialStart = new Date(Math.ceil(Date.now() / TIME_STEP_MS) * TIME_STEP_MS);
 
     const initialFormState:  IFormData = {
         tower: 'A',
         floor: '1',
         room: '1',
-        date: minDate,
-        timeStart: minHours+':'+minMinutes,
-        timeEnd: minHours+':'+minMinutes,
+        date: dateToString(initialStart),
+        timeStart: timeToString(initialStart),
+        timeEnd: timeToString(new Date (initialStart.getTime() + 30 * 60 * 1000)),
         comment: '',
     }
 
     const [formState, setFormState] = useState(initialFormState);
 
     useEffect(() => {
-        const startMoment = new Date(formState.date + ' ' + formState.timeStart).getTime();
-        const newTimeEnd = getEndTime(startMoment,30 * 60 * 1000);
+        const newTimeEnd = getEndTime(formState.timeStart,30 * 60 * 1000);
         setFormState(prevFormState => ({...prevFormState, timeEnd: newTimeEnd}));
     }, [formState.timeStart, formState.date])
 
@@ -45,6 +56,7 @@ const Form = () => {
             <div className={styles.content}>
                 <div className={styles.column}>
                     <SelectWrapper
+                        currentValue={formState.tower}
                         key={'tower'}
                         id={'tower'}
                         onChange={(newValue) => setFormState({...formState, tower: newValue})}
@@ -52,6 +64,7 @@ const Form = () => {
                         title={'Башня'}
                     />
                     <SelectWrapper
+                        currentValue={formState.floor}
                         key={'floor'}
                         id={'floor'}
                         onChange={(newValue) => setFormState({...formState, floor: newValue})}
@@ -59,6 +72,7 @@ const Form = () => {
                         title={'Этаж'}
                     />
                     <SelectWrapper
+                        currentValue={formState.room}
                         key={'room'}
                         id={'room'}
                         onChange={(newValue) => setFormState({...formState, room: newValue})}
@@ -73,32 +87,81 @@ const Form = () => {
                     />
                 </div>
                 <div className={styles.column}>
-                    <input
-                        type='date'
-                        value={formState.date}
-                        min={formState.date}
-                        onChange={(e) => setFormState({...formState, date: e.target.value})}
-                    />
-                    <input
-                        type='time'
-                        value={formState.timeStart}
-                        onChange={(e) => {
-                            setFormState({...formState, timeStart: e.target.value})
-                        }}
-                        step={900}
-                    />
-                    <Intervals
-                        intervals={[30, 60, 120]}
-                        onChange={(value) => {
-                            const startMoment = new Date(formState.date + ' ' + formState.timeStart).getTime();
-                            const newTimeEnd = getEndTime(startMoment,value * 60 * 1000);
-                            setFormState(prevFormState => ({...prevFormState, timeEnd: newTimeEnd}));
-                        }}
-                    />
+                    {/*<div>*/}
+                    {/*    <label htmlFor={'date'}>Дата</label>*/}
+                    {/*    <input*/}
+                    {/*        id={'date'}*/}
+                    {/*        type='date'*/}
+                    {/*        value={formState.date}*/}
+                    {/*        min={dateToString(initialStart)}*/}
+                    {/*        onChange={(e) => setFormState({...formState, date: e.target.value})}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
+                    {/*<div>*/}
+                    {/*    <label htmlFor={'timeStart'}>Время начала</label>*/}
+                    {/*    <input*/}
+                    {/*        id={'timeStart'}*/}
+                    {/*        type='time'*/}
+                    {/*        value={formState.timeStart}*/}
+                    {/*        onChange={(e) => {*/}
+                    {/*            setFormState({...formState, timeStart: e.target.value})*/}
+                    {/*        }}*/}
+                    {/*        step={900}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
+                    {/*<div>*/}
+                    {/*    <label htmlFor={'timeEnd'}>Время окончания</label>*/}
+                    {/*    <input*/}
+                    {/*        id={'timeEnd'}*/}
+                    {/*        type='time'*/}
+                    {/*        value={formState.timeEnd}*/}
+                    {/*        onChange={(e) => {*/}
+                    {/*            setFormState({...formState, timeEnd: e.target.value})*/}
+                    {/*        }}*/}
+                    {/*        step={900}*/}
+                    {/*    />*/}
+                    {/*</div>*/}
+                    <div>
+                        <input
+                            id={'date'}
+                            type='date'
+                            value={formState.date}
+                            min={dateToString(initialStart)}
+                            onChange={(e) => setFormState({...formState, date: e.target.value})}
+                        />
+                        <input
+                            id={'timeStart'}
+                            type='time'
+                            value={formState.timeStart}
+                            onChange={(e) => {
+                                setFormState({...formState, timeStart: e.target.value})
+                            }}
+                            step={900}
+                        />
+                        <span> - </span>
+                        <input
+                            id={'timeEnd'}
+                            type='time'
+                            value={formState.timeEnd}
+                            onChange={(e) => {
+                                setFormState({...formState, timeEnd: e.target.value})
+                            }}
+                            step={900}
+                        />
+                    </div>
                     <TotalCard data={formState}/>
+                    <Button
+                        type={'service'}
+                        name={'Очистить'}
+                        onClick={() => setFormState({...initialFormState})}
+                    />
                 </div>
             </div>
-            <Button name={'Отправить'} onClick={() => console.log(formState)}/>
+                <Button
+                    type={'main'}
+                    name={'Отправить'}
+                    onClick={() => console.log(formState)}
+                />
         </div>
     );
 };

@@ -6,7 +6,24 @@ interface TotalCardProps {
     data: IFormData
 }
 
+const getDiffMs = (start: Date, end: Date): number => {
+    return Math.abs(start.getTime() - end.getTime())
+}
+
 const TotalCard = ({data}: TotalCardProps) => {
+
+    let intervalMinutes = getDiffMs(
+        new Date(data.date + ' ' + data.timeEnd),
+        new Date(data.date + ' ' + data.timeStart)
+    )/1000/60;
+
+    let intervalHours = 0;
+
+    if (intervalMinutes > 59) {
+        intervalHours = Math.floor(intervalMinutes / 60);
+        intervalMinutes = intervalMinutes % 60;
+    }
+
     return (
         <div>
             <div>
@@ -28,7 +45,9 @@ const TotalCard = ({data}: TotalCardProps) => {
                 Время {data.timeStart} - {data.timeEnd}
             </div>
             <div>
-                Интервал 30 минут
+                Интервал
+                {intervalHours > 0 && ' ' + intervalHours + ' ч. '}
+                {' ' + intervalMinutes} мин.
             </div>
         </div>
     );
