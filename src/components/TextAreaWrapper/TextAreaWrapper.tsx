@@ -1,15 +1,19 @@
 import React from 'react';
 import TextArea from "../UI/TextArea/TextArea";
+import styles from './TextAreaWrapper.module.css';
 
 interface TextAreaWrapperProps{
-    title: String
+    title: string,
+    onChange: (newValue: string)=>void,
+    id: string,
+    value: string,
 }
 
-const TextAreaWrapper = ({title}: TextAreaWrapperProps) => {
+const TextAreaWrapper = ({title, value, onChange, id}: TextAreaWrapperProps) => {
     return (
-        <div>
-            <p>{title}</p>
-            <TextArea/>
+        <div className={styles.root}>
+            <label htmlFor={id}>{title}</label>
+            <TextArea id={id} value={value} onChange={onChange}/>
         </div>
     );
 };

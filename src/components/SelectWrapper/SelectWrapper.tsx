@@ -3,15 +3,17 @@ import styles from './SelectWrapper.module.css';
 import Select from "../UI/Select/Select";
 
 interface SelectWrapper {
-    options: String[],
-    title: String
+    options: string[],
+    title: string,
+    id: string,
+    onChange: (newValue: string)=>void,
 }
 
-const SelectWrapper = ({options, title}: SelectWrapper) => {
+const SelectWrapper = ({options, id, title, onChange}: SelectWrapper) => {
     return (
         <div className={styles.root}>
-            <p className={styles.title}>{title}</p>
-            <Select options={options}/>
+            <label htmlFor={id} className={styles.title}>{title}</label>
+            <Select id={id} onChange={onChange} options={options}/>
         </div>
     );
 };

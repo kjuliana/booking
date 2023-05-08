@@ -2,13 +2,27 @@ import React from 'react'
 import styles from './Select.module.css';
 
 interface SelectProps {
-    options: String[]
+    options: string[],
+    onChange: (newValue: string)=>void,
+    id: string
 }
 
-const Select = ({options}: SelectProps) => {
+const Select = ({options, id, onChange}: SelectProps) => {
     return (
-        <select>
-            {options.map(option => <option className={styles.option} key={''+option}>{option}</option>)}
+        <select
+            id={id}
+            name={id}
+            onChange={(e) => onChange(e.target.value)}
+        >
+            {options.map(option =>
+                <option
+                    className={styles.option}
+                    key={option}
+                    value={option}
+                >
+                    {option}
+                </option>
+            )}
         </select>
     )
 }
