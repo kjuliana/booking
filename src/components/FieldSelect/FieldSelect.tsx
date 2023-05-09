@@ -1,8 +1,8 @@
 import React from 'react';
-import styles from './SelectWrapper.module.css';
+import styles from './FieldSelect.module.css';
 import Select from "../UI/Select/Select";
 
-interface SelectWrapperProps {
+interface FieldSelectProps {
     currentValue: string,
     options: string[],
     title: string,
@@ -10,7 +10,7 @@ interface SelectWrapperProps {
     onChange: (newValue: string)=>void,
 }
 
-const SelectWrapper = ({options, currentValue, id, title, onChange}: SelectWrapperProps) => {
+const FieldSelect = ({options, currentValue, id, title, onChange}: FieldSelectProps) => {
     return (
         <div className={styles.root}>
             <label htmlFor={id} className={styles.title}>{title}</label>
@@ -19,4 +19,4 @@ const SelectWrapper = ({options, currentValue, id, title, onChange}: SelectWrapp
     );
 };
 
-export default SelectWrapper;
+export default FieldSelect;

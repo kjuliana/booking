@@ -15,8 +15,29 @@
     display: flex;
     justify-content: space-between;
     width: 100%;
+    gap: 20px;
 }
 
 .column {
+    flex-basis: 50%;
+}
 
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    gap: 20px;
+}
+
+.dateInput,
+.timeInput {
+    border: none;
+    color: var(--accent-color);
+    font: inherit;
+    cursor: pointer;
+}
+
+.dateInput:focus ,
+.timeInput:focus {
+    cursor: text;
 }

@@ -1,3 +1,10 @@
-.option {
+.root {
+    border: none;
+    color: var(--accent-color);
+    font: inherit;
+    text-align: center;
+    cursor: pointer;
+}
 
+.option {
 }

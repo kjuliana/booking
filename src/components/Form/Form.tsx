@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import styles from './Form.module.css';
-import SelectWrapper from "../SelectWrapper/SelectWrapper";
-import TextAreaWrapper from "../TextAreaWrapper/TextAreaWrapper";
+import FieldSelect from "../FieldSelect/FieldSelect";
 import Button from "../UI/Button/Button";
-import TotalCard from "../TotalCard/TotalCard";
 import {IFormData} from "../../models/models";
+import TextArea from "../UI/TextArea/TextArea";
 
 const dateToString = (date: Date) => {
     const year = date.getFullYear();
@@ -25,6 +24,10 @@ const getEndTime = (startTime: string, intervalMs: number): string => {
     const date = new Date();
     date.setHours(Number(hour), Number(minute));
     return timeToString(new Date(date.getTime() + intervalMs));
+}
+
+const getDiffMs = (start: Date, end: Date): number => {
+    return Math.abs(start.getTime() - end.getTime())
 }
 
 const TIME_STEP_MS = 1000*60*15;
@@ -50,12 +53,25 @@ const Form = () => {
         setFormState(prevFormState => ({...prevFormState, timeEnd: newTimeEnd}));
     }, [formState.timeStart, formState.date])
 
+
+    let intervalMinutes = getDiffMs(
+        new Date(formState.date + ' ' + formState.timeEnd),
+        new Date(formState.date + ' ' + formState.timeStart)
+    )/1000/60;
+
+    let intervalHours = 0;
+
+    if (intervalMinutes > 59) {
+        intervalHours = Math.floor(intervalMinutes / 60);
+        intervalMinutes = intervalMinutes % 60;
+    }
+
     return (
         <div className={styles.root}>
             <h1>Бронирование переговорных комнат</h1>
             <div className={styles.content}>
                 <div className={styles.column}>
-                    <SelectWrapper
+                    <FieldSelect
                         currentValue={formState.tower}
                         key={'tower'}
                         id={'tower'}
@@ -63,7 +79,7 @@ const Form = () => {
                         options={['A', 'B']}
                         title={'Башня'}
                     />
-                    <SelectWrapper
+                    <FieldSelect
                         currentValue={formState.floor}
                         key={'floor'}
                         id={'floor'}
@@ -71,7 +87,7 @@ const Form = () => {
                         options={['3', '4', '5', '6', '7', '8']}
                         title={'Этаж'}
                     />
-                    <SelectWrapper
+                    <FieldSelect
                         currentValue={formState.room}
                         key={'room'}
                         id={'room'}
@@ -79,57 +95,25 @@ const Form = () => {
                         options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']}
                         title={'Переговорка'}
                     />
-                    <TextAreaWrapper
+                    <TextArea
                         value={formState.comment}
                         id={'comment'}
                         onChange={(newValue) => setFormState({...formState, comment: newValue})}
-                        title={'Комментрий'}
+                        placeholder={'Оставьте комментарий'}
                     />
                 </div>
                 <div className={styles.column}>
-                    {/*<div>*/}
-                    {/*    <label htmlFor={'date'}>Дата</label>*/}
-                    {/*    <input*/}
-                    {/*        id={'date'}*/}
-                    {/*        type='date'*/}
-                    {/*        value={formState.date}*/}
-                    {/*        min={dateToString(initialStart)}*/}
-                    {/*        onChange={(e) => setFormState({...formState, date: e.target.value})}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-                    {/*<div>*/}
-                    {/*    <label htmlFor={'timeStart'}>Время начала</label>*/}
-                    {/*    <input*/}
-                    {/*        id={'timeStart'}*/}
-                    {/*        type='time'*/}
-                    {/*        value={formState.timeStart}*/}
-                    {/*        onChange={(e) => {*/}
-                    {/*            setFormState({...formState, timeStart: e.target.value})*/}
-                    {/*        }}*/}
-                    {/*        step={900}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
-                    {/*<div>*/}
-                    {/*    <label htmlFor={'timeEnd'}>Время окончания</label>*/}
-                    {/*    <input*/}
-                    {/*        id={'timeEnd'}*/}
-                    {/*        type='time'*/}
-                    {/*        value={formState.timeEnd}*/}
-                    {/*        onChange={(e) => {*/}
-                    {/*            setFormState({...formState, timeEnd: e.target.value})*/}
-                    {/*        }}*/}
-                    {/*        step={900}*/}
-                    {/*    />*/}
-                    {/*</div>*/}
+                    <input
+                        className={styles.dateInput}
+                        id={'date'}
+                        type='date'
+                        value={formState.date}
+                        min={dateToString(initialStart)}
+                        onChange={(e) => setFormState({...formState, date: e.target.value})}
+                    />
                     <div>
                         <input
-                            id={'date'}
-                            type='date'
-                            value={formState.date}
-                            min={dateToString(initialStart)}
-                            onChange={(e) => setFormState({...formState, date: e.target.value})}
-                        />
-                        <input
+                            className={styles.timeInput}
                             id={'timeStart'}
                             type='time'
                             value={formState.timeStart}
@@ -140,6 +124,7 @@ const Form = () => {
                         />
                         <span> - </span>
                         <input
+                            className={styles.timeInput}
                             id={'timeEnd'}
                             type='time'
                             value={formState.timeEnd}
@@ -148,20 +133,25 @@ const Form = () => {
                             }}
                             step={900}
                         />
+                        <span>
+                            {intervalHours > 0 && ' ' + intervalHours + ' ч. '}
+                            {' ' + intervalMinutes} мин.
+                        </span>
                     </div>
-                    <TotalCard data={formState}/>
-                    <Button
-                        type={'service'}
-                        name={'Очистить'}
-                        onClick={() => setFormState({...initialFormState})}
-                    />
                 </div>
             </div>
+            <div className={styles.actions}>
+                <Button
+                    type={'service'}
+                    name={'Очистить'}
+                    onClick={() => setFormState({...initialFormState})}
+                />
                 <Button
                     type={'main'}
                     name={'Отправить'}
                     onClick={() => console.log(formState)}
                 />
+            </div>
         </div>
     );
 };

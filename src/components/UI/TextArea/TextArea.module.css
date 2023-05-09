@@ -1,0 +1,8 @@
+.root {
+    width: 250px;
+    height: 100px;
+    resize: none;
+    font: inherit;
+    padding: 5px;
+    box-sizing: border-box;
+}

@@ -11,6 +11,7 @@ interface SelectProps {
 const Select = ({options, currentValue, id, onChange}: SelectProps) => {
     return (
         <select
+            className={styles.root}
             id={id}
             name={id}
             onChange={(e) => onChange(e.target.value)}
