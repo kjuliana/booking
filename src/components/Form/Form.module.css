@@ -10,6 +10,10 @@
     box-sizing: border-box;
 }
 
+.muteText {
+    color: #d2d2d2;
+}
+
 .title {
     margin-bottom: 40px;
     font-weight: 700;

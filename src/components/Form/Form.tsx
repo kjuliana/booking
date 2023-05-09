@@ -146,7 +146,7 @@ const Form = () => {
                                 onChange={(e) => setFormState({...formState, dateStart: e.target.value})}
                             />
                             {formState.dateStart !== formState.dateEnd &&
-                            <span> ➜ {formState.dateEnd.split('-').reverse().join('.')}</span>
+                            <span className={styles.muteText}> — {formState.dateEnd.split('-').reverse().join('.')}</span>
                             }
                         </div>
                         <div>
@@ -158,7 +158,7 @@ const Form = () => {
                                 onChange={(e) => setFormState({...formState, timeStart: e.target.value})}
                                 step={900}
                             />
-                            <span> ➜ </span>
+                            <span className={styles.muteText}> — </span>
                             <input
                                 className={styles.timeInput}
                                 id={'timeEnd'}
