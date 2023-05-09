@@ -2,20 +2,38 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 700px;
-    height: 500px;
-    border: 4px solid var(--accent-color);
-    box-shadow: 1px 1px 15px 0 var(--accent-color);
+    /*width: 700px;*/
+    /*height: 500px;*/
+    box-shadow: 1px 1px 200px -45px var(--accent-color);
     border-radius: 12px;
-    padding: 40px;
+    padding: 20px 40px;
     box-sizing: border-box;
+}
+
+.title {
+    margin-bottom: 40px;
+    font-weight: 700;
+    font-size: 25px;
+}
+
+.themeWrapper {
+    border: 1px solid var(--apperance-color);
+    border-radius: 12px;
+    padding: 10px;
+    gap: 10px;
+}
+
+.themeTitle {
+    margin-bottom: 15px;
 }
 
 .content {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     width: 100%;
     gap: 20px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--apperance-color);
 }
 
 .column {
@@ -27,17 +45,24 @@
     justify-content: flex-end;
     width: 100%;
     gap: 20px;
+    margin: 20px 0;
 }
 
 .dateInput,
 .timeInput {
+    transition-property: border-color,background-color,opacity;
+    transition-duration: .15s;
+    transition-timing-function: ease-in-out;
     border: none;
     color: var(--accent-color);
     font: inherit;
     cursor: pointer;
+    border-bottom: 1px solid white;
 }
 
 .dateInput:focus ,
 .timeInput:focus {
     cursor: text;
+    outline: none;
+    border-bottom: 1px solid var(--apperance-color);
 }

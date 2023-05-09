@@ -23,7 +23,23 @@
     color: #fff;
 }
 
+.main:hover {
+    background-color: #1f87ff;
+}
+
+.main:active {
+    background-color: #006be5;
+}
+
 .service {
     background-color: var(--apperance-color);
     color: #000;
+}
+
+.service:hover {
+    background-color: #edf3fc;
+}
+
+.service:active {
+    background-color: #dbe2ec;
 }
