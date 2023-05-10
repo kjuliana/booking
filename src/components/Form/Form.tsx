@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import styles from './Form.module.css';
 import FieldSelect from "../FieldSelect/FieldSelect";
 import Button from "../UI/Button/Button";
@@ -22,25 +22,29 @@ const dayToString = (date: Date) => {
     return date.getDay();
 }
 
-const getEndTime = (startTime: string, startDate: string, intervalMs: number): Date => {
-    const [hour, minute] = startTime.split(':');
-    const [year, month, day] = startDate.split('-');
-    const date = new Date(
+const parseDateTime = (date: string, time: string): Date => {
+    const [hour, minute] = time.split(':');
+    const [year, month, day] = date.split('-');
+
+    return new Date(
         Number(year),
         Number(month)- 1,
         Number(day),
         Number(hour),
         Number(minute)
     );
-
-    return new Date(date.getTime() + intervalMs);
 }
 
-const getDiffMs = (start: Date, end: Date): number => {
-    return Math.abs(start.getTime() - end.getTime())
+const getInterval = (start: Date, end: Date): {hours: number, minutes: number} => {
+    const ms = Math.abs(start.getTime() - end.getTime());
+    const hours = Math.floor(ms/ MS_IN_HOUR);
+    const minutes = ms/ MS_IN_MINUTE % 60;
+    return {minutes, hours}
 }
 
 const TIME_STEP_MS = 1000*60*15;
+const MS_IN_MINUTE = 1000*60;
+const MS_IN_HOUR = 1000*60*60;
 
 const week = new Map([
     [1, 'ПН'],
@@ -53,70 +57,63 @@ const week = new Map([
 ]);
 
 const Form = () => {
+    const minStart = useMemo(() => new Date(Math.ceil(Date.now() / TIME_STEP_MS) * TIME_STEP_MS), []);
+    // const initialEnd = useMemo(() => new Date(initialStart.getTime() + 30 * 60 * 1000), [initialStart]);
 
-    const initialStart = new Date(Math.ceil(Date.now() / TIME_STEP_MS) * TIME_STEP_MS);
-    const initialEnd = new Date (initialStart.getTime() + 30 * 60 * 1000);
-
-    const initialFormState:  IFormData = {
-        tower: 'A',
-        floor: '1',
-        room: '1',
-        dateStart: dateToString(initialStart),
-        dateEnd: dateToString(initialEnd),
-        timeStart: timeToString(initialStart),
-        timeEnd: timeToString(initialEnd),
+    const initialFormState:  IFormData = useMemo(() => ({
+        tower: '',
+        floor: '',
+        room: '',
+        dateStart: '',
+        dateEnd: '',
+        timeStart: '',
+        timeEnd: '',
         comment: '',
-    }
+    }), [])
 
     const [formState, setFormState] = useState(initialFormState);
 
     let weekDayStart = dayToString(new Date(formState.dateStart));
     let weekDayEnd = dayToString(new Date(formState.dateEnd));
 
-    const intervalMs = getDiffMs(
+    const interval = getInterval(
         new Date(formState.dateEnd + ' ' + formState.timeEnd),
         new Date(formState.dateStart + ' ' + formState.timeStart)
     );
 
-    const intervalHours = Math.floor(intervalMs/ 1000/ 60 / 60);
-    const intervalMinutes = intervalMs/1000/ 60 % 60;
-
     useEffect(() => {
-        const newStart = (new Date(formState.dateStart + ' ' + formState.timeStart));
-        if (initialStart.getTime() > newStart.getTime()) {
-            setFormState(prevFormState => ({
-                ...prevFormState,
-                timeStart: initialFormState.timeStart,
-                timeEnd: initialFormState.timeEnd,
-                dateStart: initialFormState.dateStart,
-                dateEnd: initialFormState.dateEnd
-            }))
+        if (!formState.timeStart) {
+            setFormState(prevFormState => ({...prevFormState, timeStart: timeToString(minStart)}))
         } else {
-            const newEnd = getEndTime(formState.timeStart, formState.dateStart, 1000*60*30);
-            const newTimeEnd = timeToString(newEnd);
-            const newDateEnd = dateToString(newEnd);
-            setFormState(prevFormState => ({...prevFormState, timeEnd: newTimeEnd, dateEnd: newDateEnd}));
+            const newStart = (new Date(formState.dateStart + ' ' + formState.timeStart));
+            if (minStart.getTime() > newStart.getTime()) {
+                setFormState(prevFormState => ({
+                    ...prevFormState,
+                    timeStart: timeToString(minStart)
+                }))
+            }
         }
-    }, [formState.timeStart, formState.dateStart])
+    }, [formState.timeStart, formState.dateStart, initialFormState, minStart])
 
     useEffect(() => {
-        const [newEndHour, newEndMinute] = formState.timeEnd.split(':');
-        const [startHour, startMinute] = formState.timeStart.split(':');
-        const [year, month, day] = formState.dateEnd.split('-');
+        setFormState(prevFormState => {
+            if (!prevFormState.timeStart || !prevFormState.timeEnd) {
+                return {...prevFormState, dateEnd: prevFormState.dateStart}
+            }
 
-        if (startHour < newEndHour || (newEndHour === startHour && newEndMinute > startMinute)) {
-            setFormState(prevFormState => ({...prevFormState, dateEnd: formState.dateStart}));
-        } else if (formState.dateStart === formState.dateEnd) {
-            const newEndDate =  new Date(new Date(
-                Number(year),
-                Number(month)- 1,
-                Number(day),
-                Number(newEndHour),
-                Number(newEndMinute)
-            ).getTime() + 1000*60*60*24);
-            setFormState(prevFormState => ({...prevFormState, dateEnd: dateToString(newEndDate)}));
-        }
-    }, [formState.timeEnd])
+            const end = parseDateTime(prevFormState.dateStart, prevFormState.timeEnd);
+            const start = parseDateTime(prevFormState.dateStart, prevFormState.timeStart);
+
+            if (start <= end) {
+                return {...prevFormState, dateEnd: prevFormState.dateStart}
+            }
+
+            const newEnd = start;
+            newEnd.setDate(newEnd.getDate() + 1);
+            return {...prevFormState, dateEnd: dateToString(newEnd)}
+        })
+
+    }, [formState.timeEnd, formState.dateStart, formState.timeStart])
 
     return (
         <div className={styles.root}>
@@ -159,15 +156,15 @@ const Form = () => {
                                 id={'date'}
                                 type='date'
                                 value={formState.dateStart}
-                                min={dateToString(initialStart)}
+                                min={dateToString(minStart)}
                                 onChange={(e) => setFormState({...formState, dateStart: e.target.value})}
                             />
                             <span>{week.get(weekDayStart)}</span>
-                            {formState.dateStart !== formState.dateEnd &&
+                            {(Boolean(formState.dateStart) && formState.dateStart !== formState.dateEnd) &&
                             <span className={styles.muteText}> — {formState.dateEnd.split('-').reverse().join('.')} {week.get(weekDayEnd)}</span>
                             }
                         </div>
-                        <div className={styles.fieldDate}>
+                        <div hidden={!formState.dateStart} className={styles.fieldDate}>
                             <input
                                 className={styles.timeInput}
                                 id={'timeStart'}
@@ -185,10 +182,12 @@ const Form = () => {
                                 onChange={(e) => setFormState({...formState, timeEnd: e.target.value})}
                                 step={900}
                             />
+                            {(formState.timeEnd && Boolean(interval.minutes || interval.hours)) &&
                             <span>
-                                {intervalHours > 0 && ' ' + intervalHours + ' ч. '}
-                                {' ' + intervalMinutes} мин.
-                            </span>
+                                    {interval.hours > 0 && ' ' + interval.hours + ' ч. '}
+                                {' ' + interval.minutes} мин.
+                                </span>
+                            }
                         </div>
                     </div>
                     <TextArea
@@ -206,6 +205,7 @@ const Form = () => {
                     onClick={() => setFormState({...initialFormState})}
                 />
                 <Button
+                    disabled={!formState.tower || !formState.floor || !formState.room || !formState.dateStart || !formState.timeStart || !formState.timeEnd}
                     type={'main'}
                     name={'Отправить'}
                     onClick={() => console.log(formState)}

@@ -9,12 +9,12 @@
     box-sizing: border-box;
     text-decoration: none;
     border: none;
-    margin: 0;
-    padding: 0 30px;
+    padding: 0 var(--padding-M);
     border-radius: var(--border-radius);
     cursor: pointer;
     white-space: nowrap;
     color: #fff;
+    flex-shrink: 1;
     height: 49px;
 }
 
@@ -42,4 +42,10 @@
 
 .service:active {
     background-color: #dbe2ec;
+}
+
+.root:disabled {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
 }

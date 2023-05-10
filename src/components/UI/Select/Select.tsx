@@ -17,6 +17,7 @@ const Select = ({options, currentValue, id, onChange}: SelectProps) => {
             onChange={(e) => onChange(e.target.value)}
             value={currentValue}
         >
+            {!currentValue && <option>…</option>}
             {options.map(option =>
                 <option
                     className={styles.option}
