@@ -18,6 +18,10 @@ const timeToString = (date: Date) => {
     return `${hours}:${minutes}`;
 }
 
+const dayToString = (date: Date) => {
+    return date.getDay();
+}
+
 const getEndTime = (startTime: string, startDate: string, intervalMs: number): Date => {
     const [hour, minute] = startTime.split(':');
     const [year, month, day] = startDate.split('-');
@@ -38,6 +42,16 @@ const getDiffMs = (start: Date, end: Date): number => {
 
 const TIME_STEP_MS = 1000*60*15;
 
+const week = new Map([
+    [1, 'ПН'],
+    [2, 'ВТ'],
+    [3, 'СР'],
+    [4, 'ЧТ'],
+    [5, 'ПТ'],
+    [6, 'СБ'],
+    [7, 'ВС']
+]);
+
 const Form = () => {
 
     const initialStart = new Date(Math.ceil(Date.now() / TIME_STEP_MS) * TIME_STEP_MS);
@@ -55,6 +69,9 @@ const Form = () => {
     }
 
     const [formState, setFormState] = useState(initialFormState);
+
+    let weekDayStart = dayToString(new Date(formState.dateStart));
+    let weekDayEnd = dayToString(new Date(formState.dateEnd));
 
     const intervalMs = getDiffMs(
         new Date(formState.dateEnd + ' ' + formState.timeEnd),
@@ -145,8 +162,9 @@ const Form = () => {
                                 min={dateToString(initialStart)}
                                 onChange={(e) => setFormState({...formState, dateStart: e.target.value})}
                             />
+                            <span>{week.get(weekDayStart)}</span>
                             {formState.dateStart !== formState.dateEnd &&
-                            <span className={styles.muteText}> — {formState.dateEnd.split('-').reverse().join('.')}</span>
+                            <span className={styles.muteText}> — {formState.dateEnd.split('-').reverse().join('.')} {week.get(weekDayEnd)}</span>
                             }
                         </div>
                         <div className={styles.fieldDate}>

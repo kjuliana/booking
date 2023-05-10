@@ -8,7 +8,7 @@
     padding: var(--padding-XS);
     cursor: text;
     border-radius: var(--border-radius);
-    border: 1px solid #B4B8BD96;
+    border: 1px solid var(--apperance-color);
     transition-property: border-color, opacity;
     transition-duration: .15s;
     transition-timing-function: ease-in-out;
@@ -16,6 +16,6 @@
 
 .root:active,
 .root:focus {
-    border: 1px solid var(--apperance-color);
+    border: 1px solid #c9cfd6;
     outline: none;
 }
