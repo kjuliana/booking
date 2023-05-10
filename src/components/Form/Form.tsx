@@ -118,8 +118,13 @@ const Form = () => {
 
     }, [formState.timeEnd, formState.dateStart, formState.timeStart])
 
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        console.log(formState);
+    }
+
     return (
-        <div className={styles.root}>
+        <form className={styles.root} onSubmit={handleSubmit}>
             <div className={styles.contentWrapper}>
                 <h1 className={styles.title}>Бронирование переговорки</h1>
                 <div className={styles.content}>
@@ -199,18 +204,18 @@ const Form = () => {
             </div>
             <div className={styles.actions}>
                 <Button
-                    type='service'
+                    intent='service'
                     name='Очистить'
                     onClick={() => setFormState({...initialFormState})}
                 />
                 <Button
                     disabled={!formState.tower || !formState.floor || !formState.room || !formState.dateStart || !formState.timeStart || !formState.timeEnd}
-                    type='main'
+                    intent='main'
+                    type='submit'
                     name='Отправить'
-                    onClick={() => console.log(formState)}
                 />
             </div>
-        </div>
+        </form>
     );
 };
 

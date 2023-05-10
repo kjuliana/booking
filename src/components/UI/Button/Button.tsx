@@ -3,15 +3,16 @@ import styles from './Button.module.css';
 
 interface ButtonProps {
     name: string,
-    onClick(event: React.MouseEvent): void,
-    type: 'main' | 'service',
+    onClick?(event: React.MouseEvent): void,
+    intent: 'main' | 'service',
+    type?: 'button' | 'submit',
     disabled?: boolean,
 }
 
-const Button = ({name, onClick, type, disabled}: ButtonProps) => {
-    const className = styles.root + ' ' + styles[type]
+const Button = ({name, onClick, type = 'button', intent, disabled}: ButtonProps) => {
+    const className = styles.root + ' ' + styles[intent]
     return (
-        <button disabled={disabled} className={className} onClick={onClick}>
+        <button type={type} disabled={disabled} className={className} onClick={onClick}>
             {name}
         </button>
     );
