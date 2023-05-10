@@ -1,7 +1,11 @@
 # Тестовое задание
 Форма бля бронирования переговорных комнат
 
+https://booking-blue.vercel.app
+
 TypeScript · React
+
+!["Форма"](src/assets/screenshot-booking.png)
 
 ## Описание задания
 Форма должна содержать следующие элементы:
