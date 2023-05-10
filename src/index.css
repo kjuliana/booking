@@ -7,8 +7,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+:root {
+  --accent-color: #07f;
+  --apperance-color: rgba(180, 184, 189, 0.59);
+  --padding-L: 40px;
+  --padding-M: 30px;
+  --padding-S: 20px;
+  --padding-XS: 10px;
+  --border-radius: 12px;
+}
+
 h1, h2, h3, h4, h5, h6 {
   margin: 0;
+  font-weight: 500;
 }
 
 code {

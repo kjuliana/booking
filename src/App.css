@@ -1,11 +1,3 @@
-
-:root {
-  --accent-color: #07f;
-  --apperance-color: #e7ecf3;
-}
-
-
-
 .App {
   display: flex;
   justify-content: center;

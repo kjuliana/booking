@@ -18,7 +18,6 @@ const timeToString = (date: Date) => {
     return `${hours}:${minutes}`;
 }
 
-
 const getEndTime = (startTime: string, startDate: string, intervalMs: number): Date => {
     const [hour, minute] = startTime.split(':');
     const [year, month, day] = startDate.split('-');
@@ -104,8 +103,9 @@ const Form = () => {
 
     return (
         <div className={styles.root}>
-            <h1 className={styles.title}>Бронирование переговорки</h1>
-            <div className={styles.content}>
+            <div className={styles.contentWrapper}>
+                <h1 className={styles.title}>Бронирование переговорки</h1>
+                <div className={styles.content}>
                     <div className={styles.themeWrapper}>
                         <h3 className={styles.themeTitle}>Где</h3>
                         <FieldSelect
@@ -136,7 +136,7 @@ const Form = () => {
                     </div>
                     <div className={styles.themeWrapper}>
                         <h3 className={styles.themeTitle}>Когда</h3>
-                        <div>
+                        <div className={styles.fieldDate}>
                             <input
                                 className={styles.dateInput}
                                 id={'date'}
@@ -149,7 +149,7 @@ const Form = () => {
                             <span className={styles.muteText}> — {formState.dateEnd.split('-').reverse().join('.')}</span>
                             }
                         </div>
-                        <div>
+                        <div className={styles.fieldDate}>
                             <input
                                 className={styles.timeInput}
                                 id={'timeStart'}
@@ -169,7 +169,7 @@ const Form = () => {
                             />
                             <span>
                                 {intervalHours > 0 && ' ' + intervalHours + ' ч. '}
-                                    {' ' + intervalMinutes} мин.
+                                {' ' + intervalMinutes} мин.
                             </span>
                         </div>
                     </div>
@@ -179,6 +179,7 @@ const Form = () => {
                         onChange={(newValue) => setFormState({...formState, comment: newValue})}
                         placeholder={'Комментарий'}
                     />
+                </div>
             </div>
             <div className={styles.actions}>
                 <Button

@@ -4,21 +4,18 @@
     font: inherit;
     box-sizing: border-box;
     text-align: left;
-    border-radius: 8px;
-    transition-property: border-color,background-color,opacity;
+    display: block;
+    padding: var(--padding-XS);
+    cursor: text;
+    border-radius: var(--border-radius);
+    border: 1px solid #B4B8BD96;
+    transition-property: border-color, opacity;
     transition-duration: .15s;
     transition-timing-function: ease-in-out;
-    display: block;
-    background: rgba(237,240,243,0.39);
-    border: 1px solid #e3e3e3;
-    font-weight: 400;
-    padding: 10px;
-    cursor: text;
 }
 
 .root:active,
 .root:focus {
-    border: 1px solid #d2d2d2;
-    background: #fff;
+    border: 1px solid var(--apperance-color);
     outline: none;
 }
