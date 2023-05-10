@@ -46,6 +46,10 @@ const TIME_STEP_MS = 1000*60*15;
 const MS_IN_MINUTE = 1000*60;
 const MS_IN_HOUR = 1000*60*60;
 
+const TOWERS = ['A', 'B'];
+const FLOORS = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27].map(String);
+const ROOMS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(String);
+
 const week = new Map([
     [1, 'ПН'],
     [2, 'ВТ'],
@@ -58,7 +62,6 @@ const week = new Map([
 
 const Form = () => {
     const minStart = useMemo(() => new Date(Math.ceil(Date.now() / TIME_STEP_MS) * TIME_STEP_MS), []);
-    // const initialEnd = useMemo(() => new Date(initialStart.getTime() + 30 * 60 * 1000), [initialStart]);
 
     const initialFormState:  IFormData = useMemo(() => ({
         tower: '',
@@ -124,28 +127,24 @@ const Form = () => {
                         <h3 className={styles.themeTitle}>Где</h3>
                         <FieldSelect
                             currentValue={formState.tower}
-                            key={'tower'}
-                            id={'tower'}
+                            id='tower'
                             onChange={(newValue) => setFormState({...formState, tower: newValue})}
-                            options={['A', 'B']}
-                            title={'Башня'}
+                            options={TOWERS}
+                            title='Башня'
                         />
                         <FieldSelect
                             currentValue={formState.floor}
-                            key={'floor'}
-                            id={'floor'}
+                            id='floor'
                             onChange={(newValue) => setFormState({...formState, floor: newValue})}
-                            options={['3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15',
-                                '16', '17', '18', '19', '20', '21', '22', '23', '24', '25', '26', '27']}
-                            title={'Этаж'}
+                            options={FLOORS}
+                            title='Этаж'
                         />
                         <FieldSelect
                             currentValue={formState.room}
-                            key={'room'}
-                            id={'room'}
+                            id='room'
                             onChange={(newValue) => setFormState({...formState, room: newValue})}
-                            options={['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']}
-                            title={'Переговорка'}
+                            options={ROOMS}
+                            title='Переговорка'
                         />
                     </div>
                     <div className={styles.themeWrapper}>
@@ -153,7 +152,7 @@ const Form = () => {
                         <div className={styles.fieldDate}>
                             <input
                                 className={styles.dateInput}
-                                id={'date'}
+                                id='date'
                                 type='date'
                                 value={formState.dateStart}
                                 min={dateToString(minStart)}
@@ -161,13 +160,13 @@ const Form = () => {
                             />
                             <span>{week.get(weekDayStart)}</span>
                             {(Boolean(formState.dateStart) && formState.dateStart !== formState.dateEnd) &&
-                            <span className={styles.muteText}> — {formState.dateEnd.split('-').reverse().join('.')} {week.get(weekDayEnd)}</span>
+                                <span className={styles.muteText}> — {formState.dateEnd.split('-').reverse().join('.')} {week.get(weekDayEnd)}</span>
                             }
                         </div>
                         <div hidden={!formState.dateStart} className={styles.fieldDate}>
                             <input
                                 className={styles.timeInput}
-                                id={'timeStart'}
+                                id='timeStart'
                                 type='time'
                                 value={formState.timeStart}
                                 onChange={(e) => setFormState({...formState, timeStart: e.target.value})}
@@ -176,38 +175,38 @@ const Form = () => {
                             <span className={styles.muteText}> — </span>
                             <input
                                 className={styles.timeInput}
-                                id={'timeEnd'}
+                                id='timeEnd'
                                 type='time'
                                 value={formState.timeEnd}
                                 onChange={(e) => setFormState({...formState, timeEnd: e.target.value})}
                                 step={900}
                             />
                             {(formState.timeEnd && Boolean(interval.minutes || interval.hours)) &&
-                            <span>
+                                <span>
                                     {interval.hours > 0 && ' ' + interval.hours + ' ч. '}
-                                {' ' + interval.minutes} мин.
+                                    {' ' + interval.minutes} мин.
                                 </span>
                             }
                         </div>
                     </div>
                     <TextArea
                         value={formState.comment}
-                        id={'comment'}
+                        id='comment'
                         onChange={(newValue) => setFormState({...formState, comment: newValue})}
-                        placeholder={'Комментарий'}
+                        placeholder='Комментарий'
                     />
                 </div>
             </div>
             <div className={styles.actions}>
                 <Button
-                    type={'service'}
-                    name={'Очистить'}
+                    type='service'
+                    name='Очистить'
                     onClick={() => setFormState({...initialFormState})}
                 />
                 <Button
                     disabled={!formState.tower || !formState.floor || !formState.room || !formState.dateStart || !formState.timeStart || !formState.timeEnd}
-                    type={'main'}
-                    name={'Отправить'}
+                    type='main'
+                    name='Отправить'
                     onClick={() => console.log(formState)}
                 />
             </div>

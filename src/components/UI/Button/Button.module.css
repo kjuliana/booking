@@ -9,7 +9,7 @@
     box-sizing: border-box;
     text-decoration: none;
     border: none;
-    padding: 0 var(--padding-M);
+    padding: 0 clamp(var(--padding-XS), 2vw, var(--padding-M));
     border-radius: var(--border-radius);
     cursor: pointer;
     white-space: nowrap;
