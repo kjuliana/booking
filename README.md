@@ -5,7 +5,7 @@ https://booking-blue.vercel.app
 
 TypeScript · React
 
-!["Форма"](src/assets/screenshot-booking.png)
+!["Форма"](src/assets/screenshot-crop.png)
 
 ## Описание задания
 Форма должна содержать следующие элементы:
