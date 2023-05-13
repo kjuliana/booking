@@ -21,9 +21,9 @@ TypeScript · React
 
 - Установить зависимости
   ```shell
-    npm install
-    ```
+  npm install
+  ```
 - Запустить dev-сервер
-    ```shell
-    npm start
-    ```
+  ```shell
+  npm start
+  ```
